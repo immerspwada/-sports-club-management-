@@ -44,7 +44,7 @@ export function QRCodeScanner({ activityId, onClose, onSuccess }: QRCodeScannerP
     } else {
       addToast({
         title: 'เช็คอินสำเร็จ!',
-        description: result.data?.status === 'on_time' 
+        description: (result.data as any)?.status === 'on_time' 
           ? 'คุณมาตรงเวลา' 
           : 'คุณมาสาย',
         variant: 'success',
