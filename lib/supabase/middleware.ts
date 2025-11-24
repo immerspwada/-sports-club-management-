@@ -71,6 +71,7 @@ export async function updateSession(request: NextRequest) {
       .maybeSingle();
 
     const userRole = userRoleData?.role || 'athlete';
+    console.log('[Middleware] User:', user.email, 'Role:', userRole, 'Path:', request.nextUrl.pathname);
 
     // ATHLETE ACCESS CONTROL
     // Single Source of Truth: profiles.membership_status

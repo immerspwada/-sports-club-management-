@@ -44,7 +44,7 @@ interface Application {
   status: 'pending' | 'approved' | 'rejected' | 'info_requested';
   review_info?: any;
   activity_log: any[];
-  profile_id: string | null;
+  profile_id?: string | null;
   created_at: string;
   updated_at: string;
   clubs?: {
@@ -267,7 +267,7 @@ export default function CoachApplicationsPage() {
           {filteredApplications.map((application) => (
             <ApplicationReviewCard
               key={application.id}
-              application={application}
+              application={application as any}
             />
           ))}
         </div>
