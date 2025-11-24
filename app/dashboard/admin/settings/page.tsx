@@ -51,7 +51,7 @@ export default function AdminSettingsPage() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: result.error || 'ไม่สามารถโหลดการตั้งค่าได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     }
 
@@ -77,7 +77,7 @@ export default function AdminSettingsPage() {
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: 'ไม่สามารถบันทึกการตั้งค่าบางส่วนได้',
-          variant: 'destructive',
+          variant: 'error',
         });
       } else {
         toast({
@@ -93,7 +93,7 @@ export default function AdminSettingsPage() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถบันทึกการตั้งค่าได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setSaving(false);

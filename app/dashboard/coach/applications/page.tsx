@@ -78,7 +78,7 @@ export default function CoachApplicationsPage() {
         toast({
           title: 'กรุณาเข้าสู่ระบบ',
           description: 'คุณต้องเข้าสู่ระบบเพื่อดูใบสมัคร',
-          variant: 'destructive',
+          variant: 'error',
         });
         router.push('/login');
         return;
@@ -95,7 +95,7 @@ export default function CoachApplicationsPage() {
         toast({
           title: 'ไม่พบข้อมูลโค้ช',
           description: 'ไม่พบข้อมูลโค้ชในระบบ',
-          variant: 'destructive',
+          variant: 'error',
         });
         setLoading(false);
         return;
@@ -111,7 +111,7 @@ export default function CoachApplicationsPage() {
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: result.error,
-          variant: 'destructive',
+          variant: 'error',
         });
       } else {
         setApplications((result.data || []) as Application[]);
@@ -121,7 +121,7 @@ export default function CoachApplicationsPage() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถโหลดใบสมัครได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setLoading(false);

@@ -69,7 +69,7 @@ export default function AthleteApplicationsPage() {
       toast({
         title: 'กรุณาเข้าสู่ระบบ',
         description: 'คุณต้องเข้าสู่ระบบเพื่อดูใบสมัคร',
-        variant: 'destructive',
+        variant: 'error',
       });
       router.push('/login');
       return;
@@ -84,7 +84,7 @@ export default function AthleteApplicationsPage() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: result.error,
-        variant: 'destructive',
+        variant: 'error',
       });
     } else {
       setApplications((result.data || []) as Application[]);

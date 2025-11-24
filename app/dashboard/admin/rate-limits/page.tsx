@@ -97,7 +97,7 @@ export default function RateLimitsPage() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถโหลดข้อมูลได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setLoading(false);
@@ -119,7 +119,7 @@ export default function RateLimitsPage() {
       toast({
         title: 'กรุณากรอกข้อมูลให้ครบ',
         description: 'ต้องระบุอีเมลและชื่อ-นามสกุล',
-        variant: 'destructive',
+        variant: 'error',
       });
       return;
     }
@@ -166,7 +166,7 @@ export default function RateLimitsPage() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: error.message || 'ไม่สามารถสร้างผู้ใช้ได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setCreating(false);
