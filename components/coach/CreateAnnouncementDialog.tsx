@@ -60,14 +60,14 @@ export function CreateAnnouncementDialog() {
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: result.error || 'ไม่สามารถสร้างประกาศได้',
-          variant: 'destructive',
+          variant: 'error',
         });
       }
     } catch (error) {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถสร้างประกาศได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setLoading(false);

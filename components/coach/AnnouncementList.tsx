@@ -47,14 +47,14 @@ export function AnnouncementList({ announcements }: AnnouncementListProps) {
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: result.error || 'ไม่สามารถลบประกาศได้',
-          variant: 'destructive',
+          variant: 'error',
         });
       }
     } catch (error) {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถลบประกาศได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setDeletingId(null);
