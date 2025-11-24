@@ -99,6 +99,8 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
+
+
   // Validate Step 1: Account Creation
   const validateStep1 = (): boolean => {
     const errors: Record<string, string> = {};
@@ -318,7 +320,7 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
 
   // Update document
   const handleDocumentChange = (
-    documentType: 'id_card' | 'house_registration' | 'birth_certificate',
+    documentType: 'id_card' | 'house_registration' | 'birth_certificate' | 'parent_id_card' | 'parent_house_registration',
     documentInfo: DocumentInfo | null
   ) => {
     setFormData((prev) => ({
