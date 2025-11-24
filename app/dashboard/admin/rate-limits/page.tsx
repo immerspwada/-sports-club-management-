@@ -78,11 +78,11 @@ export default function RateLimitsPage() {
       const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
       const signupsLastHour = users?.filter(
-        u => new Date(u.created_at) > oneHourAgo
+        (u: any) => new Date(u.created_at) > oneHourAgo
       ).length || 0;
 
       const signupsLast24h = users?.filter(
-        u => new Date(u.created_at) > oneDayAgo
+        (u: any) => new Date(u.created_at) > oneDayAgo
       ).length || 0;
 
       setStats({
