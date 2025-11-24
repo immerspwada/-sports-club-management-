@@ -42,8 +42,8 @@ export async function createActivity(formData: {
   const { data: activity, error } = await supabase
     .from('activities')
     .insert({
-      club_id: coach.club_id,
-      coach_id: coach.id,
+      club_id: (coach as any).club_id,
+      coach_id: (coach as any).id,
       ...formData,
     })
     .select()
