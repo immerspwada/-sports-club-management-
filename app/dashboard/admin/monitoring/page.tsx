@@ -21,7 +21,7 @@ export default async function MonitoringPage() {
   const errorStats = errorStatsResult.data;
   
   // ดึงข้อผิดพลาดล่าสุด
-  const { data: recentErrors } = await supabase
+  const recentErrorsResult = await supabase
     .from('error_logs')
     .select(`
       id,
@@ -34,12 +34,22 @@ export default async function MonitoringPage() {
     `)
     .order('created_at', { ascending: false })
     .limit(20);
+  const recentErrors = recentErrorsResult.data as Array<{
+    id: string;
+    error_type: string;
+    error_code: string | null;
+    error_message: string;
+    created_at: string;
+    page_url: string | null;
+    user_id: string | null;
+  }> | null;
   
   // ดึงการสมัครที่ไม่สมบูรณ์
-  const { data: incompleteRegs } = await supabase
+  const incompleteRegsResult = await supabase
     .from('incomplete_registrations')
     .select('*')
     .limit(20);
+  const incompleteRegs = incompleteRegsResult.data;
   
   // ดึงสถิติการสมัคร
   const signupStatsResult = await supabase
