@@ -42,19 +42,19 @@ export default async function MonitoringPage() {
     .limit(20);
   
   // ดึงสถิติการสมัคร
-  const { data: signupStats } = await supabase
+  const signupStatsResult = await supabase
     .from('auth.users')
     .select('created_at')
-    .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-    .catch(() => ({ data: [] }));
+    .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+  const signupStats = signupStatsResult.data;
   
   // นับ Auth Users ที่ไม่มี Profile
-  const { count: usersWithoutProfile } = await supabase
+  const usersWithoutProfileResult = await supabase
     .from('auth.users')
     .select('id', { count: 'exact', head: true })
     .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-    .is('profiles.id', null)
-    .catch(() => ({ count: 0 }));
+    .is('profiles.id', null);
+  const usersWithoutProfile = usersWithoutProfileResult.count;
   
   return (
     <div className="container mx-auto p-6 space-y-6">
