@@ -22,19 +22,22 @@ export default async function DashboardPage() {
   }
 
   // Get user role from user_roles table
-  const { data: userRole, error: roleError } = await supabase
+  const userRoleResult = await supabase
     .from('user_roles')
     .select('role')
     .eq('user_id', user.id)
     .single();
+  const userRole = userRoleResult.data as { role: string } | null;
+  const roleError = userRoleResult.error;
 
   if (roleError || !userRole) {
     // If no role found, check if user has a profile
-    const { data: profile } = await supabase
+    const profileResult = await supabase
       .from('profiles')
       .select('role')
       .eq('user_id', user.id)
       .single();
+    const profile = profileResult.data as { role: string } | null;
 
     if (profile?.role) {
       // Redirect based on profile role

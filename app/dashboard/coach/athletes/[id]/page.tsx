@@ -21,23 +21,25 @@ export default async function AthleteDetailPage({ params }: { params: Params }) 
   }
 
   // Get coach profile
-  const { data: coach } = await supabase
+  const coachResult = await supabase
     .from('coaches')
     .select('id, club_id')
     .eq('user_id', user.id)
     .maybeSingle();
+  const coach = coachResult.data as { id: string; club_id: string } | null;
 
   if (!coach) {
     redirect('/dashboard/coach');
   }
 
   // Get athlete details
-  const { data: athlete } = await supabase
+  const athleteResult = await supabase
     .from('athletes')
     .select('*')
     .eq('id', params.id)
     .eq('club_id', coach.club_id)
     .single();
+  const athlete = athleteResult.data as any;
 
   if (!athlete) {
     redirect('/dashboard/coach/athletes');
@@ -81,11 +83,12 @@ export default async function AthleteDetailPage({ params }: { params: Params }) 
     .limit(5);
 
   // Get goals
-  const { data: goals } = await supabase
+  const goalsResult = await supabase
     .from('athlete_goals')
     .select('*')
     .eq('athlete_id', athlete.id)
     .order('created_at', { ascending: false });
+  const goals = goalsResult.data as any[] | null;
 
   const activeGoals = goals?.filter((g) => g.status === 'active') || [];
   const completedGoals = goals?.filter((g) => g.status === 'completed') || [];

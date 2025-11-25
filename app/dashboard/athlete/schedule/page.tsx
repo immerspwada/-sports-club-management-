@@ -17,11 +17,12 @@ export default async function SchedulePage() {
   }
 
   // Get athlete profile
-  const { data: athlete } = await supabase
+  const athleteResult = await supabase
     .from('athletes')
     .select('id, club_id')
     .eq('user_id', user.id)
     .single();
+  const athlete = athleteResult.data as { id: string; club_id: string } | null;
 
   if (!athlete) {
     redirect('/dashboard/athlete');
@@ -31,7 +32,7 @@ export default async function SchedulePage() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const { data: allSessions } = await supabase
+  const allSessionsResult = await supabase
     .from('training_sessions')
     .select(`
       *,
@@ -43,12 +44,18 @@ export default async function SchedulePage() {
     .eq('club_id', athlete.club_id)
     .order('session_date', { ascending: true })
     .order('start_time', { ascending: true });
+  const allSessions = allSessionsResult.data as any[] | null;
 
   // Get attendance records for this athlete
-  const { data: attendanceRecords } = await supabase
+  const attendanceRecordsResult = await supabase
     .from('attendance_logs')
     .select('training_session_id, status, check_in_time')
     .eq('athlete_id', athlete.id);
+  const attendanceRecords = attendanceRecordsResult.data as Array<{
+    training_session_id: string;
+    status: string;
+    check_in_time: string | null;
+  }> | null;
 
   // Create attendance map
   const attendanceMap = new Map(

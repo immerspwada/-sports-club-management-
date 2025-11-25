@@ -266,13 +266,18 @@ export default async function AthleteDashboard() {
     const dayAfterTomorrow = new Date(tomorrow);
     dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1);
 
-    const { data: tomorrowSessions } = await supabase
+    const tomorrowSessionsResult = await supabase
       .from('training_sessions')
       .select('id, session_name, start_time')
       .eq('club_id', profile.clubs.id)
       .gte('session_date', tomorrow.toISOString())
       .lt('session_date', dayAfterTomorrow.toISOString())
       .limit(1);
+    const tomorrowSessions = tomorrowSessionsResult.data as Array<{
+      id: string;
+      session_name: string;
+      start_time: string;
+    }> | null;
 
     if (tomorrowSessions && tomorrowSessions.length > 0) {
       recommendations.push({
