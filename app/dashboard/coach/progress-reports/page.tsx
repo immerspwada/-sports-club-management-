@@ -27,14 +27,14 @@ export default async function CoachProgressReportsPage() {
     .from('coaches')
     .select('id, club_id')
     .eq('user_id', user.id)
-    .maybeSingle();
+    .maybeSingle() as { data: { id: string; club_id: string } | null };
 
   if (!coach) {
     redirect('/dashboard/coach');
   }
 
   // Get all progress reports for athletes in coach's club
-  const { data: reports } = await supabase
+  const { data: reports } = await (supabase as any)
     .from('progress_reports')
     .select(`
       *,
