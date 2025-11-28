@@ -282,41 +282,7 @@ export interface Database {
           marked_by?: string | null;
           notes?: string | null;
           created_at?: string;
-        };
-      };
-      attendance: {
-        Row: {
-          id: string;
-          training_session_id: string;
-          athlete_id: string;
-          status: AttendanceStatus;
-          check_in_time: string | null;
-          check_in_method: CheckInMethod;
-          marked_by: string | null;
-          notes: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          training_session_id: string;
-          athlete_id: string;
-          status: AttendanceStatus;
-          check_in_time?: string | null;
-          check_in_method: CheckInMethod;
-          marked_by?: string | null;
-          notes?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          training_session_id?: string;
-          athlete_id?: string;
-          status?: AttendanceStatus;
-          check_in_time?: string | null;
-          check_in_method?: CheckInMethod;
-          marked_by?: string | null;
-          notes?: string | null;
-          created_at?: string;
+          updated_at?: string;
         };
       };
       performance_records: {
