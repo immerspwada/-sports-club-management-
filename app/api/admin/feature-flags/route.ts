@@ -66,22 +66,27 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Build update object
-    const updates: Record<string, any> = {
+    const updateData: {
+      updated_at: string;
+      enabled?: boolean;
+      rollout_percentage?: number;
+    } = {
       updated_at: new Date().toISOString(),
     };
 
     if (enabled !== undefined) {
-      updates.enabled = enabled;
+      updateData.enabled = enabled;
     }
 
     if (rollout_percentage !== undefined) {
-      updates.rollout_percentage = rollout_percentage;
+      updateData.rollout_percentage = rollout_percentage;
     }
 
     // Update feature flag
+    // @ts-ignore - Supabase type inference issue
     const { data, error } = await supabase
       .from('feature_flags')
-      .update(updates as any)
+      .update(updateData)
       .eq('name', name)
       .select()
       .single();
