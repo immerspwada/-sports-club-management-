@@ -74,6 +74,6 @@ export default function DashboardStats({
         icon={Award}
         color="yellow"
       />
-    </div>
+    </section>
   );
 }
