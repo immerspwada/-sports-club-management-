@@ -90,7 +90,7 @@ export function CreateHomeTrainingDialog() {
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: error,
-          variant: 'destructive',
+          variant: 'error',
         });
       } else {
         toast({
@@ -114,7 +114,7 @@ export function CreateHomeTrainingDialog() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถบันทึกข้อมูลได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setLoading(false);

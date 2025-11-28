@@ -44,7 +44,7 @@ export function ParentConnectionForm() {
       toast({
         title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
         description: 'อีเมลและชื่อผู้ปกครองเป็นข้อมูลที่จำเป็น',
-        variant: 'destructive',
+        variant: 'error',
       });
       return;
     }
@@ -55,7 +55,7 @@ export function ParentConnectionForm() {
       toast({
         title: 'อีเมลไม่ถูกต้อง',
         description: 'กรุณากรอกอีเมลที่ถูกต้อง',
-        variant: 'destructive',
+        variant: 'error',
       });
       return;
     }
@@ -84,14 +84,14 @@ export function ParentConnectionForm() {
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: result.error || 'ไม่สามารถเพิ่มผู้ปกครองได้',
-          variant: 'destructive',
+          variant: 'error',
         });
       }
     } catch (error) {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถเพิ่มผู้ปกครองได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setLoading(false);

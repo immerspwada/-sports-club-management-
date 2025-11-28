@@ -68,14 +68,14 @@ export function NotificationPreferencesDialog({
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: result.error,
-          variant: 'destructive',
+          variant: 'error',
         });
       }
     } catch (error) {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถอัพเดทการตั้งค่าได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setLoading(false);

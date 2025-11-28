@@ -53,7 +53,7 @@ export function CoachHomeTrainingList() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: error,
-        variant: 'destructive',
+        variant: 'error',
       });
     } else {
       toast({

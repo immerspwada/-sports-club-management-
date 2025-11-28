@@ -50,7 +50,7 @@ export function ParentConnectionList() {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถโหลดข้อมูลผู้ปกครองได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setLoading(false);
@@ -71,14 +71,14 @@ export function ParentConnectionList() {
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: result.error,
-          variant: 'destructive',
+          variant: 'error',
         });
       }
     } catch (error) {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถส่งอีเมลได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setActionLoading(null);
@@ -100,14 +100,14 @@ export function ParentConnectionList() {
         toast({
           title: 'เกิดข้อผิดพลาด',
           description: result.error,
-          variant: 'destructive',
+          variant: 'error',
         });
       }
     } catch (error) {
       toast({
         title: 'เกิดข้อผิดพลาด',
         description: 'ไม่สามารถลบผู้ปกครองได้',
-        variant: 'destructive',
+        variant: 'error',
       });
     } finally {
       setActionLoading(null);
