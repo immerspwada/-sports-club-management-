@@ -9,7 +9,8 @@ export async function getCoachTournaments() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
     .from('tournaments')
     .select(`
       *,
@@ -27,7 +28,10 @@ export async function getTournamentDetails(tournamentId: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
-  const { data: tournament, error: tournamentError } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sb = supabase as any;
+
+  const { data: tournament, error: tournamentError } = await sb
     .from('tournaments')
     .select('*')
     .eq('id', tournamentId)
@@ -35,7 +39,7 @@ export async function getTournamentDetails(tournamentId: string) {
 
   if (tournamentError) return { error: tournamentError.message };
 
-  const { data: participants, error: participantsError } = await supabase
+  const { data: participants, error: participantsError } = await sb
     .from('tournament_participants')
     .select(`
       *,
@@ -66,19 +70,20 @@ export async function createTournament(data: {
     .from('profiles')
     .select('club_id, role')
     .eq('id', user.id)
-    .single();
+    .single<{ club_id: string | null; role: string }>();
 
   if (!profile || profile.role !== 'coach' || !profile.club_id) {
     return { error: 'Only coaches can create tournaments' };
   }
 
-  const { data: tournament, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: tournament, error } = await (supabase as any)
     .from('tournaments')
     .insert({
       club_id: profile.club_id,
       created_by: user.id,
       name: data.name,
-      tournament_type: data.sport_type, // ใช้ tournament_type แทน sport_type
+      tournament_type: data.sport_type,
       location: data.location,
       notes: data.notes,
       max_participants: data.max_participants,
@@ -96,12 +101,14 @@ export async function createTournament(data: {
 }
 
 // Update tournament
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateTournament(tournamentId: string, data: any) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
-  const { data: tournament, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: tournament, error } = await (supabase as any)
     .from('tournaments')
     .update(data)
     .eq('id', tournamentId)
@@ -121,7 +128,8 @@ export async function deleteTournament(tournamentId: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from('tournaments')
     .delete()
     .eq('id', tournamentId);
@@ -142,7 +150,7 @@ export async function getAvailableAthletes(tournamentId: string) {
     .from('profiles')
     .select('club_id')
     .eq('id', user.id)
-    .single();
+    .single<{ club_id: string | null }>();
 
   if (!profile?.club_id) return { error: 'Coach profile not found' };
 
@@ -151,18 +159,19 @@ export async function getAvailableAthletes(tournamentId: string) {
     .select('id, full_name, email, profile_picture_url')
     .eq('club_id', profile.club_id)
     .eq('role', 'athlete')
-    .order('full_name');
+    .order('full_name') as { data: { id: string; full_name: string; email: string; profile_picture_url: string | null }[] | null; error: unknown };
 
-  if (error) return { error: error.message };
+  if (error) return { error: String(error) };
 
-  const { data: participants } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: participants } = await (supabase as any)
     .from('tournament_participants')
     .select('athlete_id, status')
     .eq('tournament_id', tournamentId);
 
-  const athletesWithStatus = athletes.map(athlete => ({
+  const athletesWithStatus = (athletes || []).map((athlete: { id: string; full_name: string; email: string; profile_picture_url: string | null }) => ({
     ...athlete,
-    participantStatus: participants?.find(p => p.athlete_id === athlete.id)?.status || null,
+    participantStatus: participants?.find((p: { athlete_id: string; status: string }) => p.athlete_id === athlete.id)?.status || null,
   }));
 
   return { athletes: athletesWithStatus };
@@ -179,7 +188,8 @@ export async function addAthleteToTournament(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
     .from('tournament_participants')
     .insert({
       tournament_id: tournamentId,
@@ -203,7 +213,8 @@ export async function removeAthleteFromTournament(tournamentId: string, athleteI
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from('tournament_participants')
     .delete()
     .eq('tournament_id', tournamentId)
@@ -226,10 +237,12 @@ export async function updateParticipantStatus(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateData: any = { status };
   if (coachNotes !== undefined) updateData.coach_notes = coachNotes;
 
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
     .from('tournament_participants')
     .update(updateData)
     .eq('tournament_id', tournamentId)
