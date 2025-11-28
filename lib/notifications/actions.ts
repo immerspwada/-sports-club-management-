@@ -29,7 +29,8 @@ export async function getNotifications(limit = 50) {
     return { data: null, error: 'ไม่พบข้อมูลผู้ใช้' };
   }
 
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
     .from('notifications')
     .select('*')
     .eq('user_id', user.id)
@@ -54,7 +55,8 @@ export async function getUnreadCount() {
     return { count: 0, error: 'ไม่พบข้อมูลผู้ใช้' };
   }
 
-  const { count, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { count, error } = await (supabase as any)
     .from('notifications')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id)
@@ -78,7 +80,8 @@ export async function markAsRead(notificationId: string) {
     return { error: 'ไม่พบข้อมูลผู้ใช้' };
   }
 
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from('notifications')
     .update({ read: true })
     .eq('id', notificationId)
@@ -103,7 +106,8 @@ export async function markAllAsRead() {
     return { error: 'ไม่พบข้อมูลผู้ใช้' };
   }
 
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from('notifications')
     .update({ read: true })
     .eq('user_id', user.id)
@@ -128,7 +132,8 @@ export async function deleteNotification(notificationId: string) {
     return { error: 'ไม่พบข้อมูลผู้ใช้' };
   }
 
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from('notifications')
     .delete()
     .eq('id', notificationId)
