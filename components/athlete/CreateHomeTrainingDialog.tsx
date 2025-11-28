@@ -66,7 +66,7 @@ export function CreateHomeTrainingDialog() {
           toast({
             title: 'เกิดข้อผิดพลาด',
             description: uploadError,
-            variant: 'destructive',
+            variant: 'error',
           });
           setLoading(false);
           return;
