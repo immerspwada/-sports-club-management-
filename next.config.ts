@@ -4,6 +4,7 @@ import withPWA from 'next-pwa';
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  turbopack: {},
   
   // Security headers configuration
   async headers() {

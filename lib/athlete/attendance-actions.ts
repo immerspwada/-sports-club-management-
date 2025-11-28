@@ -325,7 +325,7 @@ export async function athleteCheckIn(sessionId: string): Promise<{
 
     // Create attendance record
     const attendanceData: AttendanceLogInsert = {
-      training_session_id: sessionId,
+      session_id: sessionId,
       // @ts-ignore
       athlete_id: athlete.id,
       status: status,
@@ -695,119 +695,4 @@ export async function getAttendanceStats(filter?: {
   }
 }
 
-/**
- * Submit a leave request for a training session
- * Requirements: BR2 - Leave Request Management
- */
-export async function requestLeave(data: {
-  sessionId: string;
-  reason: string;
-}): Promise<{ success?: boolean; data?: LeaveRequest; error?: string }> {
-  try {
-    const supabase = await createClient();
-
-    // Get current user
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return { error: 'ไม่ได้รับอนุญาต: กรุณาเข้าสู่ระบบ' };
-    }
-
-    // Get athlete profile
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, club_id')
-      .eq('user_id', user.id)
-      .single();
-
-    if (profileError || !profile) {
-      return { error: 'ไม่พบข้อมูลนักกีฬา' };
-    }
-
-    // Validate reason length (minimum 10 characters)
-    const trimmedReason = data.reason.trim();
-    if (trimmedReason.length < 10) {
-      return { error: 'กรุณาระบุเหตุผลอย่างน้อย 10 ตัวอักษร' };
-    }
-
-    // Get session details to validate timing
-    const { data: session, error: sessionError } = await supabase
-      .from('training_sessions')
-      .select('scheduled_at, club_id')
-      .eq('id', data.sessionId)
-      .single();
-
-    if (sessionError || !session) {
-      return { error: 'ไม่พบข้อมูลตารางฝึกซ้อม' };
-    }
-
-    // Verify session belongs to athlete's club
-    if (session.club_id !== profile.club_id) {
-      return { error: 'คุณไม่สามารถแจ้งลาสำหรับตารางฝึกซ้อมนี้ได้' };
-    }
-
-    // Validate timing - must be at least 2 hours before session
-    const sessionTime = new Date(session.scheduled_at);
-    const now = new Date();
-    const twoHoursFromNow = new Date(now.getTime() + 2 * 60 * 60 * 1000);
-
-    if (sessionTime < twoHoursFromNow) {
-      return { error: 'ต้องแจ้งลาล่วงหน้าอย่างน้อย 2 ชั่วโมงก่อนเวลาเริ่ม' };
-    }
-
-    // Check for duplicate leave request
-    const { data: existingRequest, error: checkError } = await supabase
-      .from('leave_requests')
-      .select('id')
-      .eq('session_id', data.sessionId)
-      .eq('athlete_id', profile.id)
-      .single();
-
-    if (existingRequest) {
-      return { error: 'คุณได้แจ้งลาสำหรับตารางฝึกซ้อมนี้แล้ว' };
-    }
-
-    // Create leave request
-    const leaveRequestData: LeaveRequestInsert = {
-      session_id: data.sessionId,
-      athlete_id: profile.id,
-      reason: trimmedReason,
-      status: 'pending',
-      requested_at: new Date().toISOString(),
-    };
-
-    const { data: newRequest, error: insertError } = await supabase
-      .from('leave_requests')
-      .insert(leaveRequestData)
-      .select()
-      .single();
-
-    if (insertError) {
-      console.error('Error creating leave request:', insertError);
-      return { error: 'ไม่สามารถสร้างคำขอลาได้' };
-    }
-
-    // Create audit log
-    await createAuditLog({
-      action_type: 'leave_request_submitted',
-      entity_type: 'leave_request',
-      entity_id: (newRequest as any).id,
-      changes: {
-        session_id: data.sessionId,
-        reason: trimmedReason,
-      },
-    });
-
-    // Invalidate cache
-    await invalidatePattern('athlete-sessions');
-    revalidatePath('/dashboard/athlete');
-
-    return { success: true, data: newRequest as LeaveRequest };
-  } catch (error) {
-    console.error('Unexpected error in requestLeave:', error);
-    return { error: 'เกิดข้อผิดพลาดที่ไม่คาดคิด' };
-  }
-}
+// Note: requestLeave function is defined earlier in this file (line ~379)
