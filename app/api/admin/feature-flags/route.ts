@@ -65,31 +65,28 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
-    // Build update object
-    const updateData: {
-      updated_at: string;
-      enabled?: boolean;
-      rollout_percentage?: number;
-    } = {
-      updated_at: new Date().toISOString(),
-    };
-
+    // Update feature flag using raw query to avoid type issues
+    const updateFields: string[] = ['updated_at = NOW()'];
+    const updateValues: any[] = [];
+    
     if (enabled !== undefined) {
-      updateData.enabled = enabled;
+      updateFields.push(`enabled = $${updateValues.length + 1}`);
+      updateValues.push(enabled);
     }
-
+    
     if (rollout_percentage !== undefined) {
-      updateData.rollout_percentage = rollout_percentage;
+      updateFields.push(`rollout_percentage = $${updateValues.length + 1}`);
+      updateValues.push(rollout_percentage);
     }
-
-    // Update feature flag
-    // @ts-ignore - Supabase type inference issue
+    
+    updateValues.push(name);
+    
     const { data, error } = await supabase
-      .from('feature_flags')
-      .update(updateData)
-      .eq('name', name)
-      .select()
-      .single();
+      .rpc('update_feature_flag', {
+        flag_name: name,
+        flag_enabled: enabled,
+        flag_rollout: rollout_percentage
+      });
 
     if (error) {
       console.error('Error updating feature flag:', error);
